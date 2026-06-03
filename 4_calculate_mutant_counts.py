@@ -6,6 +6,28 @@ import glob
 import os
 from tqdm import tqdm
 
+# Parse command-line arguments
+parser = argparse.ArgumentParser(
+    description="Calculate mutant counts from NGS reads."
+)
+
+parser.add_argument(
+    "-i", "--input",
+    required=True,
+    help="Input directory containing sample folders"
+)
+
+parser.add_argument(
+    "-o", "--output",
+    required=True,
+    help="Output directory for mutant counts"
+)
+
+args = parser.parse_args()
+input_folder = args.input
+output_folder = args.output
+
+# loop through filtered and trimmed files
 def fastq_to_dataframe(fastq_file):
     # Count total records first (optional but useful for tqdm)
     total = 11894983
@@ -20,14 +42,6 @@ def fastq_to_dataframe(fastq_file):
 
     df = pd.DataFrame(records)
     return df
-
-# Set the global font to be Arial, size 10 (or any other size you prefer)
-plt.rcParams['font.size'] = 18
-plt.rcParams['font.family'] = 'Arial'
-
-# loop through filtered and trimmed files
-input_folder = "data/FASTQ/ml_assessment_library"
-output_folder = "data/Excel/ml_assessment_library"
 
 for file in glob.glob(os.path.join(input_folder, "*filtered_trimmed.fastq")):
     base = os.path.basename(file).replace('_filtered_trimmed.fastq', '')
