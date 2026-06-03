@@ -37,6 +37,9 @@ dir_path = args.input
 output_dir_path = args.output
 num_workers = args.threads
 
+# Create output directory if needed
+os.makedirs(output_dir_path, exist_ok=True)
+
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s:%(message)s')
 
