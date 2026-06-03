@@ -24,7 +24,7 @@ Installing the data processing environment from the yaml file can take several m
 ## Example data processing
 
 <p align="center">
-  <img src="Fig.1c.png" width="800">
+  <img src="Fig.1c.png" width="600">
 </p>
 
 Example configuration and input to run NGS data processing and calculate the log enrichment score S are included in example/raw_NGS_files. A small test set (10 reads, example/raw_NGS_files/example_test) can be run from the root directory via the following commands:
