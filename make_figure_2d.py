@@ -91,8 +91,6 @@ def AA_hotencoding(variant):
                 
     return onehot_encoded
 
-# This takes 6 min to run with 2 folds and 10 test set percentages
-
 # Paul Tol's Notes color scheme
 colors = ['#4477AA','#66CCEE','#228833','#CCBB44','#EE6677','#AA3377','#BBBBBB']
 
@@ -101,9 +99,20 @@ colors = ['#4477AA','#66CCEE','#228833','#CCBB44','#EE6677','#AA3377','#BBBBBB']
 plt.rcParams['font.family'] = 'Arial'
 plt.rcParams['font.size'] = 16
 
+# Parse command-line arguments
+parser = argparse.ArgumentParser(
+    description="Compare different model architectures for sequence-to-function prediction."
+)
+
+parser.add_argument(
+    "-i", "--input",
+    required=True,
+    help="Input directory containing sample folders"
+)
 
 # Load the Excel file into a DataFrame
-file_path = 'data/Excel/third_round/merged_enrichment_scores_with_aa_column_threshold.xlsx'
+args = parser.parse_args()
+file_path = args.input
 df = pd.read_excel(file_path)
 
 # log2 transform the 'averaged_enrichment_score' column
