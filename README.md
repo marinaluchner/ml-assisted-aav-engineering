@@ -1,7 +1,7 @@
 # Machine learning-assisted directed evolution yields dramatic improvement on novel AAV engineering task
 ---
 <p align="center">
-  <img src="Fig.1a.png" width="800">
+  <img src="Fig.1a.png" width="600">
 </p>
 
 This repository provides source code to reproduce, verify and extend the study "Machine learning-assisted directed evolution yields dramatic improvement on novel AAV engineering task". Source data files necessary to reproduce the manuscript figures are provided on NCBI SRA (https://www.ncbi.nlm.nih.gov/bioproject/1473000).
@@ -14,11 +14,12 @@ Directed evolution enables the discovery of protein mutants with improved fitnes
 
 ## Requirements
 
-The requirements to run the data processing, model training and analysis are included in the ml_assisted_aav_env.yaml file. A conda environment can be created from this file with
+The requirements to run the data processing and associated analysis are stored in data_processing.yaml. Meanwhile, the requirements for model training, analysis and visualization can be found in the modelling.yaml. Conda environment can be created from these files using the commands below.
 ```bash
-conda env create -f ml_assisted_aav_env.yaml
+conda env create -f data_processing.yaml
+conda env create -f modelling.yaml
 ```
-Installing the environment from the yaml file can take several minutes.
+Installing the data processing environment from the yaml file can take several minutes, while the modelling environment can take up to an hour.
 
 ## Example data processing
 
@@ -46,6 +47,6 @@ For more information, see example/sequence_to_function
 
 # Contact
 
-Name: YOUR NAME
+Name: Marina Luchner
 
-Email: [your.email@institution.edu](mailto:your.email@institution.edu)
+Email: [marina.luchner@eng.ox.ac.uk](mailto:marina.luchner@eng.ox.ac.uk)
