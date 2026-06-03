@@ -45,7 +45,11 @@ python make_figure_2d.py -i example/sequence_to_function/Round_3_Threshold -o ex
 ```
 Training and evaluating the models takes ~15 min without GPU usage. The expected output will be stored in example/sequence_to_function/plot.png.
 
-# Contact
+## Reproduction instructions
+
+For full reproduction of results, download the source data (https://www.ncbi.nlm.nih.gov/bioproject/1473000) and repeat the steps outlined under example data processing. Next, run the visualization Python scripts and Jupyter notebooks using the resulting enrichment_score.csv as input.
+
+## Contact
 
 Name: Marina Luchner
 
