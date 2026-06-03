@@ -8,7 +8,7 @@
 # Print the current working directory
 echo "The current working directory is: $(pwd)"
 
-Folder="data/FASTQ/ml_assessment_library"
+Folder="$1"
 
 for file in "$Folder"/*paired_ends_merged.fastq; do
     if [ -e "$file" ]; then
