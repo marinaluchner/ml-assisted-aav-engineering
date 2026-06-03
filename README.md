@@ -38,13 +38,11 @@ Alignment and merging are the most time-consuming steps and take ~5 min to run w
 
 ## Example model training
 
-Example configuration and input files to train and compare sequence-to-function models are included in example/sequence_to_function/.
+Example configuration and input files to train and compare sequence-to-function models are included in example/sequence_to_function/. Model training and evaluation can be tested by running the following command:
 ```bash
-python 3 make_figure_2d.py -c example/sequence_to_function
+python make_figure_2d.py -i example/sequence_to_function/Round_3_Threshold -o example/sequence_to_function
 ```
-For more information, see example/sequence_to_function
-
----
+Training and evaluating the models takes ~15 min without GPU usage (on Windows with WSL). The expected output will be stored in example/sequence_to_function/plot.png.
 
 # Contact
 
