@@ -7,9 +7,35 @@ import os
 import glob
 import sys
 
+# Parse command-line arguments
+parser = argparse.ArgumentParser(
+    description="Align and merge paired-end FASTQ reads."
+)
+
+parser.add_argument(
+    "-i", "--input",
+    required=True,
+    help="Input directory containing sample folders"
+)
+
+parser.add_argument(
+    "-o", "--output",
+    required=True,
+    help="Output directory for merged FASTQ files"
+)
+
+parser.add_argument(
+    "-t", "--threads",
+    type=int,
+    default=4,
+    help="Number of worker processes (default: 4)"
+)
+
 # Define input and output files
-dir_path = "data/FASTQ/ml_assessment_library"
-output_dir_path = "data/FASTQ/ml_assessment_library"
+args = parser.parse_args()
+dir_path = args.input
+output_dir_path = args.output
+num_workers = args.threads
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s:%(message)s')
@@ -119,6 +145,6 @@ for folder in os.listdir(dir_path):
             print("The files have the same base name.")
             output_file = os.path.join(output_dir_path, f"{base_name1}_paired_ends_merged.fastq")
             print(output_file)
-            process_paired_end_reads(file1, file2, output_file, num_workers=4)
+            process_paired_end_reads(file1, file2, output_file, num_workers=num_workers)
         else:
             print("The files do not have the same base name.")
