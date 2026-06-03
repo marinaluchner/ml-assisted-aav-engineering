@@ -30,11 +30,9 @@ Installing the data processing environment from the yaml file can take several m
 Example input to run NGS data processing and calculate the log enrichment score S are included in example/raw_NGS_files. Small test files (15,145 reads, example/raw_NGS_files/example_L1_R1_cropped.fq) can be run from the root directory via the following commands:
 ```bash
 bash 1_combine_FASTQ_files.bash example/raw_NGS_files
-python 3 2_align_and_merge_paired_end_reads.py - example/raw_NGS_files/example_test
+python 2_align_and_merge_paired_end_reads.py -i example/raw_NGS_files -o example/outputs
 ```
-This test took less than 20? seconds to run with 1? CPU (on Linux and Windows). The expected outputs are included in example/raw_NGS_files/outputs/enrichment_scores.csv.
-
-For more information, see example/raw_NGS_files/raw_NGS_files/.
+Alignment and merging are the most time-consuming steps and take ~5 min to run with 4 threads (on Windows with WSL). The expected outputs are included in example/outputs/enrichment_scores.csv.
 
 ## Example model training
 
