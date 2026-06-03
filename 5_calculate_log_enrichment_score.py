@@ -3,13 +3,27 @@ import itertools
 import os
 import matplotlib.pyplot as plt
 
-# Define the folder path
-folder_path = "data/Excel/ml_assessment_library/EVAAV"
-outputfile_path = "data/Excel/ml_assessment_library/EVAAV"
+# Parse command-line arguments
+parser = argparse.ArgumentParser(
+    description="Align and merge paired-end FASTQ reads."
+)
 
-# Set the global font to be Arial, size 10 (or any other size you prefer)
-plt.rcParams['font.size'] = 18
-plt.rcParams['font.family'] = 'Arial'
+parser.add_argument(
+    "-i", "--input",
+    required=True,
+    help="Input directory containing sample folders"
+)
+
+parser.add_argument(
+    "-o", "--output",
+    required=True,
+    help="Output directory for merged FASTQ files"
+)
+
+# Define the folder path
+args = parser.parse_args()
+dir_path = args.input
+output_dir_path = args.output
 
 # define numerator and denominator files to calculate enrichment
 numerator_files = [["post_encapsulation_rep_1_variant_count.xlsx"], ["post_encapsulation_rep_2_variant_count.xlsx"], ["post_encapsulation_rep_3_variant_count.xlsx"]]
