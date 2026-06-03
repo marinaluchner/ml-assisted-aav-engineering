@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Folder="data/FASTQ/ml_assessment_library"
+Folder="$1"
 
 # Populate the array with file groups
 for dir in "$Folder"/*; do
