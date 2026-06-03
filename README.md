@@ -13,6 +13,7 @@ Directed evolution enables the discovery of protein mutants with improved fitnes
 ---
 
 ## Requirements
+This software was tested under Windows Subsystem for Linux 2 (WSL2; Linux kernel 6.6.114.1) on a workstation equipped with a 13th Generation Intel Core i7-13700H processor and 16GB RAM. No GPU acceleration was used.
 
 The requirements to run the data processing and associated analysis are stored in data_processing.yaml. Meanwhile, the requirements for model training, analysis and visualization can be found in the modelling.yaml. Conda environment can be created from these files using the commands below.
 ```bash
@@ -34,7 +35,7 @@ python 2_align_and_merge_paired_end_reads.py -i example/raw_NGS_files -o example
 bash 3_filter_and_trim_reads.bash example/outputs
 python 4_calculate_mutant_counts.py -i example/outputs -o example/outputs
 ```
-Alignment and merging are the most time-consuming steps and take ~5 min to run with 4 threads (on Windows with WSL). The expected outputs are included in example/outputs/enrichment_scores.csv.
+Alignment and merging are the most time-consuming steps and take ~5 min to run with 4 threads. The expected outputs are included in example/outputs/enrichment_scores.csv.
 
 ## Example model training
 
@@ -42,7 +43,7 @@ Example configuration and input files to train and compare sequence-to-function 
 ```bash
 python make_figure_2d.py -i example/sequence_to_function/Round_3_Threshold -o example/sequence_to_function
 ```
-Training and evaluating the models takes ~15 min without GPU usage (on Windows with WSL). The expected output will be stored in example/sequence_to_function/plot.png.
+Training and evaluating the models takes ~15 min without GPU usage. The expected output will be stored in example/sequence_to_function/plot.png.
 
 # Contact
 
