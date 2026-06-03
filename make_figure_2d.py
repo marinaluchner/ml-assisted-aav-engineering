@@ -109,11 +109,20 @@ parser.add_argument(
     required=True,
     help="Input directory containing sample folders"
 )
+parser.add_argument(
+    "-o", "--output",
+    required=True,
+    help="Output directory containing ML model performance plot"
+)
 
 # Load the Excel file into a DataFrame
 args = parser.parse_args()
 file_path = args.input
 df = pd.read_excel(file_path)
+
+# Create output directory if needed
+output_dir = args.output
+os.makedirs(output_dir, exist_ok=True)
 
 # log2 transform the 'averaged_enrichment_score' column
 df['log2_averaged_enrichment_score'] = df['averaged_enrichment_score'].apply(lambda x: np.log2(x))
@@ -244,4 +253,4 @@ plt.gca().tick_params(labelsize=16)
 plt.ylim(0, 1)
 plt.tight_layout()
 
-plt.savefig("plots/figure_2d.png")
+plt.savefig(f"{output_dir}/figure_2d.png")
