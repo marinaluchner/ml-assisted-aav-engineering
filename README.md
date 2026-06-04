@@ -52,9 +52,7 @@ For full reproduction of results, download the source data (https://www.ncbi.nlm
 
 ## Contact
 
-Marina Luchner
-Department of Engineering Science
-University of Oxford
+Marina Luchner, Department of Engineering Science, University of Oxford
 
 For questions regarding the code, data or analyses presented in this repository, please contact:
 (mailto:marina.luchner@eng.ox.ac.uk)
