@@ -5,29 +5,34 @@ import matplotlib.pyplot as plt
 
 # Parse command-line arguments
 parser = argparse.ArgumentParser(
-    description="Align and merge paired-end FASTQ reads."
+    description="Calculate enrichment score in one sample compared to another."
 )
 
 parser.add_argument(
-    "-i", "--input",
+    "-post_encapsulation_i", "--post_encapsulation_input",
     required=True,
-    help="Input directory containing sample folders"
+    help="Input file from pre-encapsulation sample (i.e., EV-AAV, AAV cell lysate or AAV media fraction)"
+)
+
+parser.add_argument(
+    "-pre_encapsulation_i", "--pre_encapsulation_input",
+    required=True,
+    help="Input file from post-encapsulation sample (i.e., plasmid library)"
 )
 
 parser.add_argument(
     "-o", "--output",
     required=True,
-    help="Output directory for merged FASTQ files"
+    help="Output directory for Excel file with enrichment scores"
 )
 
 # Define the folder path
 args = parser.parse_args()
-dir_path = args.input
-output_dir_path = args.output
+outputfile_path = args.output
 
 # define numerator and denominator files to calculate enrichment
-numerator_files = [["post_encapsulation_rep_1_variant_count.xlsx"], ["post_encapsulation_rep_2_variant_count.xlsx"], ["post_encapsulation_rep_3_variant_count.xlsx"]]
-denominator_files = [["pre_encapsulation_rep_1_variant_count.xlsx"], ["pre_encapsulation_rep_2_variant_count.xlsx"], ["pre_encapsulation_rep_3_variant_count.xlsx"]]
+numerator_files = [[args.post_encapsulation_input]]
+denominator_files = [[args.pre_encapsulation_input]]
 
 # Function to read and combine parts of Excel files
 def read_and_combine_excel_parts(base_file_name, file_path):
