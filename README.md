@@ -34,6 +34,7 @@ bash 1_combine_FASTQ_files.bash example/raw_NGS_files
 python 2_align_and_merge_paired_end_reads.py -i example/raw_NGS_files -o example/outputs
 bash 3_filter_and_trim_reads.bash example/outputs
 python 4_calculate_mutant_counts.py -i example/outputs -o example/outputs
+python 5_calculate_log_enrichment_score.py -i_pre_encapsulation example/outputs/example_variant_count.fastq -i_post_encapsulation example/outputs/example_variant_count.fastq -o example/outputs
 ```
 Alignment and merging are the most time-consuming steps and take ~5 min to run with 4 threads. The expected outputs are included in example/outputs/enrichment_scores.csv.
 
