@@ -55,6 +55,6 @@ For full reproduction of results, download the source data (https://www.ncbi.nlm
 Marina Luchner, Department of Engineering Science, University of Oxford
 
 For questions regarding the code, data or analyses presented in this repository, please contact:
-(mailto:marina.luchner@eng.ox.ac.uk)
+[marina.luchner@eng.ox.ac.uk](mailto:marina.luchner@eng.ox.ac.uk)
 
 Bug reports and feature requests are welcome through the GitHub Issues page.
