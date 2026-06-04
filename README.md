@@ -1,7 +1,7 @@
 # Machine learning-assisted directed evolution yields dramatic improvement on novel AAV engineering task
 ---
 <p align="center">
-  <img src="Fig.1a.png" width="600">
+  <img src="screening_workflow.png" width="600">
 </p>
 
 This repository provides source code to reproduce, verify and extend the study "Machine learning-assisted directed evolution yields dramatic improvement on novel AAV engineering task". Source data files necessary to reproduce the manuscript figures are provided on NCBI SRA (https://www.ncbi.nlm.nih.gov/bioproject/1473000).
@@ -25,7 +25,7 @@ Installing the data processing environment from the yaml file can take several m
 ## Example data processing
 
 <p align="center">
-  <img src="Fig.1c.png" width="700">
+  <img src="data_processing.png" width="700">
 </p>
 
 Example input to run NGS data processing and calculate the log enrichment score S are included in example/raw_NGS_files. Small test files (15,145 reads, example/raw_NGS_files/example_L1_R1_cropped.fq) can be run from the root directory via the following commands:
