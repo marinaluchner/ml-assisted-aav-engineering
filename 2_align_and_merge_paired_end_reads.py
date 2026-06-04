@@ -141,8 +141,8 @@ for folder in os.listdir(dir_path):
         file_name2 = os.path.basename(file2)
 
         # Remove the '_R1.fastq' and '_R2.fastq' suffixes from the file names
-        base_name1 = file_name1[:-13]
-        base_name2 = file_name2[:-13]
+        base_name1 = file_name1.replace("_R1.fq", "")
+        base_name2 = file_name2.replace("_R2.fq", "")
         # Check if the base names are the same
         if base_name1 == base_name2:
             print("The files have the same base name.")
