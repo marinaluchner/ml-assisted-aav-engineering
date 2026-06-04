@@ -134,7 +134,7 @@ for folder in os.listdir(dir_path):
         print(f"Processing folder: {folder_path}")
 
         # Grab files in the folder with expected filename
-        file1, file2 = glob.glob(f"{folder_path}/*_1.fq") + glob.glob(f"{folder_path}/*_2.fq")
+        file1, file2 = glob.glob(f"{folder_path}/*_R1.fq") + glob.glob(f"{folder_path}/*_R2.fq")
 
         # Extract the file names from the paths
         file_name1 = os.path.basename(file1)
