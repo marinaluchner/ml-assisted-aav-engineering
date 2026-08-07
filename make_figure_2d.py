@@ -1,9 +1,11 @@
+import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import ShuffleSplit
 import seaborn as sns
+import argparse
 
 def LongShortTermMemoryModel(L1=160, L2=20):
     

@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import glob
 import os
 from tqdm import tqdm
+import argparse
 
 # Parse command-line arguments
 parser = argparse.ArgumentParser(

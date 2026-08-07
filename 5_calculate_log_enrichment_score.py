@@ -2,6 +2,7 @@ import pandas as pd
 import itertools
 import os
 import matplotlib.pyplot as plt
+import argparse
 
 # Parse command-line arguments
 parser = argparse.ArgumentParser(
@@ -62,15 +63,17 @@ for numerator_list, denominator_list in zip(numerator_files, denominator_files):
     for numerator, denominator in itertools.product(numerator_list, denominator_list):
         print(f"Numerator file: {numerator}, Denominator file: {denominator}")
 
-        # get file name without extension
-        denominator_filename_without_ext = os.path.splitext(denominator)[0]
-        numerator_filename_without_ext = os.path.splitext(numerator)[0]
+        # get folder path and file name without extension
+        denominator_folder_path = os.path.dirname(denominator)
+        numerator_folder_path = os.path.dirname(numerator)
+        denominator_filename_without_ext = os.path.splitext(os.path.basename(denominator))[0]
+        numerator_filename_without_ext = os.path.splitext(os.path.basename(numerator))[0]
         print(f"Denominator filename without extension: {denominator_filename_without_ext}")
         print(f"Numerator filename without extension: {numerator_filename_without_ext}")
 
         # read the excel files into pandas dataframes
-        df_numerator = read_and_combine_excel_parts(numerator_filename_without_ext, folder_path)
-        df_denominator = read_and_combine_excel_parts(denominator_filename_without_ext, folder_path)
+        df_numerator = read_and_combine_excel_parts(numerator_filename_without_ext, numerator_folder_path)
+        df_denominator = read_and_combine_excel_parts(denominator_filename_without_ext, denominator_folder_path)
         print("Numerator dataframe shape: ", df_numerator.shape)
         print("Denominator dataframe shape: ", df_denominator.shape)
 

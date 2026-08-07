@@ -1,32 +1,55 @@
 import pandas as pd
-import glob
+import argparse
 import os
-import sys
+from functools import reduce
 
-# Directory paths
-rep1 = 'data/Excel/ml_assessment_library/EVAAV/enrichment_score_pre_encapsulation_rep_1_variant_count_post_encapsulation_rep_1_variant_count.xlsx'
-rep2 = 'data/Excel/ml_assessment_library/EVAAV/enrichment_score_pre_encapsulation_rep_2_variant_count_post_encapsulation_rep_2_variant_count.xlsx'
-rep3 = 'data/Excel/ml_assessment_library/EVAAV/enrichment_score_pre_encapsulation_rep_3_variant_count_post_encapsulation_rep_3_variant_count.xlsx'
+# Parse command-line arguments
+parser = argparse.ArgumentParser(
+    description="Combine enrichment score datasets across replicates and calculate the average and standard deviation."
+)
 
-df1 = pd.read_excel(rep1, usecols=['variant', 'enrichment_score'])
-df2 = pd.read_excel(rep2, usecols=['variant', 'enrichment_score'])
-df3 = pd.read_excel(rep3, usecols=['variant', 'enrichment_score'])
+parser.add_argument(
+    "-i", "--inputs",
+    required=True,
+    nargs='+',
+    help="Input Excel files with enrichment scores for each replicate (at least 2 required)"
+)
 
-# Merge the first two DataFrames
-merged_df_1_2 = pd.merge(df1, df2, on='variant', suffixes=('_rep_1', ''))
-print(merged_df_1_2)
+parser.add_argument(
+    "-o", "--output",
+    required=True,
+    help="Output Excel file path for the merged enrichment scores"
+)
 
+args = parser.parse_args()
 
-# Merge the result with the third DataFrame
-merged_df = pd.merge(merged_df_1_2, df3, on='variant', suffixes=('_rep_2', '_rep_3'))
+# Allow --output to be either a directory (a default filename is appended)
+# or a full file path ending in .xlsx
+output_path = args.output
+if os.path.splitext(output_path)[1] == '':
+    os.makedirs(output_path, exist_ok=True)
+    output_path = os.path.join(output_path, 'merged_enrichment_scores.xlsx')
+
+if len(args.inputs) < 2:
+    parser.error("At least 2 input files are required to combine across replicates.")
+
+# Read each replicate file, renaming enrichment_score to keep replicate identity
+dfs = []
+for i, input_file in enumerate(args.inputs, start=1):
+    df = pd.read_excel(input_file, usecols=['variant', 'enrichment_score'])
+    df = df.rename(columns={'enrichment_score': f'enrichment_score_rep_{i}'})
+    dfs.append(df)
+    print(f"Replicate {i} file: {input_file}, shape: {df.shape}")
+
+# Merge all replicate DataFrames on 'variant'
+merged_df = reduce(lambda left, right: pd.merge(left, right, on='variant'), dfs)
 print(merged_df)
 
-# Calculate the average enrichment score
-merged_df['average_enrichment_score'] = merged_df[['enrichment_score_rep_1', 'enrichment_score_rep_2', 'enrichment_score_rep_3']].mean(axis=1)
-
-# Calculate the standard deviation of the enrichment scores
-merged_df['std_dev_enrichment_score'] = merged_df[['enrichment_score_rep_1', 'enrichment_score_rep_2', 'enrichment_score_rep_3']].std(axis=1)
+# Calculate the average and standard deviation of the enrichment scores across replicates
+enrichment_score_columns = [f'enrichment_score_rep_{i}' for i in range(1, len(args.inputs) + 1)]
+merged_df['average_enrichment_score'] = merged_df[enrichment_score_columns].mean(axis=1)
+merged_df['std_dev_enrichment_score'] = merged_df[enrichment_score_columns].std(axis=1)
 
 # Save the merged DataFrame to an Excel file
-merged_file_name = 'data/Excel/merged_enrichment_scores.xlsx'
-merged_df.to_excel(merged_file_name, index=False)
+merged_df.to_excel(output_path, index=False)
+print(f"File saved as {output_path}")

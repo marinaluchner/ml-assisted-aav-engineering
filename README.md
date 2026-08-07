@@ -30,8 +30,8 @@ Installing the data processing environment from the yaml file can take several m
 
 Example input to run NGS data processing and calculate the log enrichment score S are included in example/raw_NGS_files. Small test files (15,145 reads, example/raw_NGS_files/example_L1_R1_cropped.fq) can be run from the root directory via the following commands:
 ```bash
-bash 1_combine_FASTQ_files.bash example/raw_NGS_files
-python 2_align_and_merge_paired_end_reads.py -i example/raw_NGS_files -o example/outputs
+bash 1_combine_FASTQ_files.bash example/raw_NGS_files example/outputs
+python 2_align_and_merge_paired_end_reads.py -i example/outputs -o example/outputs
 bash 3_filter_and_trim_reads.bash example/outputs
 python 4_calculate_mutant_counts.py -i example/outputs -o example/outputs
 python 5_calculate_log_enrichment_score.py -i_pre_encapsulation example/outputs/example_variant_count.fastq -i_post_encapsulation example/outputs/example_variant_count.fastq -o example/outputs
@@ -40,11 +40,11 @@ Alignment and merging are the most time-consuming steps and take ~5 min to run w
 
 ## Example model training
 
-Example configuration and input files to train and compare sequence-to-function models are included in example/sequence_to_function/. Model training and evaluation can be tested by running the following command:
+Example configuration and input files to train and compare sequence-to-function models are included in example/sequence-to-function/. Model training and evaluation can be tested by running the following command:
 ```bash
-python make_figure_2d.py -i example/sequence_to_function/Round_3_Threshold -o example/sequence_to_function
+python make_figure_2d.py -i example/sequence-to-function/3_Round_Threshold.xlsx -o example/sequence-to-function
 ```
-Training and evaluating the models takes ~15 min without GPU usage. The expected output will be stored in example/sequence_to_function/plot.png.
+Training and evaluating the models takes ~15 min without GPU usage. The expected output will be stored in example/sequence-to-function/figure_2d.png.
 
 ## Reproduction instructions
 

@@ -1,3 +1,4 @@
+import argparse
 import gzip
 import multiprocessing as mp
 from itertools import islice
@@ -89,12 +90,19 @@ def align_and_merge_reads(seq2, seq1): # swapping seq1 and seq2 to slide reverse
 
     return merged_sequence if best_matches > 0 else None
 
+def normalize_header(header):
+    # Strip the read-number marker so R1/R2 headers can be compared for equality,
+    # supporting both BGI/MGI-style ("...run/1", "...run/2") and Illumina-style
+    # ("... 1:N:0:...", "... 2:N:0:...") headers.
+    if header.endswith('/1') or header.endswith('/2'):
+        return header[:-2]
+    return header.replace('1:N:0', 'X:N:0').replace('2:N:0', 'X:N:0')
+
 def process_chunk(chunk):
     result = []
     errors = []
     for (header1, seq1, _), (header2, seq2, _) in chunk:
-        header1_renamed = header1.replace("1:N:0", "2:N:0")
-        if header1_renamed == header2:
+        if normalize_header(header1) == normalize_header(header2):
             seq2_rc = reverse_complement(seq2)
             merged_sequence = align_and_merge_reads(seq1, seq2_rc)
             if merged_sequence is not None:
