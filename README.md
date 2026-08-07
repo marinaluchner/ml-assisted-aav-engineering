@@ -28,13 +28,16 @@ Installing the data processing environment from the yaml file can take several m
   <img src="data_processing.png" width="700">
 </p>
 
-Example input to run NGS data processing and calculate the log enrichment score S are included in example/raw_NGS_files. Small test files (15,145 reads, example/raw_NGS_files/example_L1_R1_cropped.fq) can be run from the root directory via the following commands:
+Example input to run NGS data processing and calculate the log enrichment score S are included in example/raw_NGS_files. Small test files (15,145 reads, example/raw_NGS_files/sample_01/example_L01_R1.fq) can be run from the root directory via the following commands:
 ```bash
+conda activate data_prep_env
 bash 1_combine_FASTQ_files.bash example/raw_NGS_files example/outputs
-python 2_align_and_merge_paired_end_reads.py -i example/outputs -o example/outputs
-bash 3_filter_and_trim_reads.bash example/outputs
+python 2_align_and_merge_paired_end_reads.py -i example/outputs -o example/outputs/sample_01
+bash 3_filter_and_trim_reads.bash example/outputs example/outputs/sample_01
 python 4_calculate_mutant_counts.py -i example/outputs -o example/outputs
-python 5_calculate_log_enrichment_score.py -i_pre_encapsulation example/outputs/example_variant_count.fastq -i_post_encapsulation example/outputs/example_variant_count.fastq -o example/outputs
+python 5_calculate_log_enrichment_score.py -pre_encapsulation_i example/outputs/sample_01/sample_01_example_variant_count.xlsx -post_encapsulation_i example/outputs/sample_01/sample_01_example_variant_count.xlsx -o example/outputs/sample_01
+python 6_combine_datasets_across_replicates.py -i example/outputs/sample_01/enrichment_score_sample_01_example_variant_count_sample_01_example_variant_count.xlsx example/outputs/sample_01/enrichment_score_sample_01_example_variant_count_sample_01_example_variant_count.xlsx -o example/outputs/sample_01
+python 7_translate_nucleotide_sequence.py -i example/outputs/sample_01 -o example/outputs/sample_01
 ```
 Alignment and merging are the most time-consuming steps and take ~5 min to run with 4 threads. The expected outputs are included in example/outputs/enrichment_scores.csv.
 
