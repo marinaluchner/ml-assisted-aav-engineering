@@ -108,12 +108,12 @@ parser = argparse.ArgumentParser(
 
 parser.add_argument(
     "-i", "--input",
-    required=True,
+    default="data/Excel/third_round/enrichment_score_with_amino_acid_sequence_threshold.xlsx",
     help="Input directory containing sample folders"
 )
 parser.add_argument(
     "-o", "--output",
-    required=True,
+    default="plots",
     help="Output directory containing ML model performance plot"
 )
 

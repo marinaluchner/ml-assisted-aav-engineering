@@ -51,11 +51,11 @@ plt.rcParams['font.size'] = 16
 
 
 # Load the Excel file into a DataFrame
-first_round = 'data/Excel/first_round/merged_enrichment_scores_with_aa_column.xlsx'
-third_round_cutoff = 'data/Excel/third_round/merged_enrichment_scores_with_aa_column_threshold.xlsx'
-third_round = 'data/Excel/third_round/merged_enrichment_scores_with_aa_column.xlsx'
-pseudo_count = 'data/Excel/third_round/merged_enrichment_scores_with_aa_column_pseudo_count.xlsx'
-weighing = 'data/Excel/third_round/merged_enrichment_scores_with_aa_column_weighing.xlsx'
+first_round = 'data/Excel/first_round/enrichment_score_with_amino_acid_sequences.xlsx'
+third_round_cutoff = 'data/Excel/third_round/enrichment_score_with_amino_acid_sequence_threshold.xlsx'
+third_round = 'data/Excel/third_round/enrichment_score_with_amino_acid_sequence.xlsx'
+pseudo_count = 'data/Excel/third_round/enrichment_score_with_amino_acid_sequence_pseudo_count.xlsx'
+weighing = 'data/Excel/third_round/enrichment_score_with_amino_acid_sequence_weighing.xlsx'
 
 df_first_round_ = pd.read_excel(first_round)
 df_third_round_cutoff_ = pd.read_excel(third_round_cutoff)

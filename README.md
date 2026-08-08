@@ -44,14 +44,41 @@ Alignment and merging are the most time-consuming steps and take ~5 min to run w
 ## Example model training
 
 Example configuration and input files to train and compare sequence-to-function models are included in example/sequence-to-function/. Model training and evaluation can be tested by running the following command:
+
 ```bash
-python make_figure_2d.py -i example/sequence-to-function/3_Round_Threshold.xlsx -o example/sequence-to-function
+conda activate modelling_env
+python make_figure_2d.py -i example/sequence-to-function/enrichment_score_with_amino_acid_sequence_threshold.xlsx -o example/sequence-to-function
 ```
 Training and evaluating the models takes ~15 min without GPU usage. The expected output will be stored in example/sequence-to-function/figure_2d.png.
 
-## Reproduction instructions
+## Full reproduction instructions
 
-For full reproduction of results, download the source data (https://www.ncbi.nlm.nih.gov/bioproject/1473000) and repeat the steps outlined under example data processing. Next, run the visualization Python scripts and Jupyter notebooks using the resulting enrichment_score.csv as input.
+For full reproduction of results, download the source data (https://www.ncbi.nlm.nih.gov/bioproject/1473000) and repeat the steps outlined under example data processing. Next, run the visualization Python scripts and Jupyter notebooks using the resulting merged_enrichment_score_with_amino_acid_sequences.xlsx files as input. 
+
+## Reproduction with pre-processed files
+
+Since raw NGS files encompass 41.9 GB of compressed data, downloading and processing can be time-intensive. Hence, we provide input data in a more pre-processed manner to reproduce, verify and extend the findings of our study. Follow the commands below and find the output graphs under plots/.
+
+```bash
+conda activate modelling_env
+jupyter execute make_figure_2a_and_supplementary_figure_S1a.ipynb
+jupyter execute make_figure_2b_and_supplementary_figure_S1b.ipynb
+python make_figure_2c.py
+python make_figure_2d.py
+conda activate data_prep_env
+jupyter execute make_figure_3a_and_supplementary_figure_S6.ipynb
+jupyter execute make_figure_3b.ipynb
+conda activate modelling_env
+jupyter execute make_figure_4a.ipynb
+jupyter execute make_figure_4b.ipynb
+jupyter execute make_figure_4c.ipynb
+jupyter execute make_figure_4d.ipynb
+jupyter execute make_supplementary_figure_S2a_and_S3a.ipynb
+jupyter execute make_supplementary_figure_S2b_and_S3b.ipynb
+jupyter execute make_supplementary_figure_S4.ipynb
+conda activate data_pred_env
+python make_supplementary_figure_S7.py
+```
 
 ## Contact
 

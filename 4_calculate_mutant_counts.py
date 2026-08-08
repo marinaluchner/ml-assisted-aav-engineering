@@ -30,8 +30,6 @@ output_folder = args.output
 
 # loop through filtered and trimmed files
 def fastq_to_dataframe(fastq_file):
-    # Count total records first (optional but useful for tqdm)
-    total = 11894983
 
     records = []
     for record in tqdm(SeqIO.parse(fastq_file, "fastq"), total=total, desc="Parsing FASTQ"):
