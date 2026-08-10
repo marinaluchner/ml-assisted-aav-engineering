@@ -39,7 +39,7 @@ python 5_calculate_log_enrichment_score.py -pre_encapsulation_i example/outputs/
 python 6_combine_datasets_across_replicates.py -i example/outputs/sample_01/enrichment_score_sample_01_example_variant_count_sample_01_example_variant_count.xlsx example/outputs/sample_01/enrichment_score_sample_01_example_variant_count_sample_01_example_variant_count.xlsx -o example/outputs/sample_01
 python 7_translate_nucleotide_sequence.py -i example/outputs/sample_01 -o example/outputs/sample_01
 ```
-Alignment and merging are the most time-consuming steps and take ~5 min to run with 4 threads. The expected outputs are included in example/outputs/sample_01/merged_enrichment_scores_with_amino_acid_sequences.xlsx.
+Alignment and merging are the most time-consuming steps, completed in 6.6 seconds on 4 threads. The expected outputs are included in example/outputs/sample_01/merged_enrichment_scores_with_amino_acid_sequences.xlsx.
 
 ## Example model training
 
