@@ -20,7 +20,7 @@ The requirements to run the data processing and associated analysis are stored i
 conda env create -f data_processing.yaml
 conda env create -f modelling.yaml
 ```
-Installing the data processing environment from the yaml file can take several minutes, while the modelling environment can take up to an hour.
+Installing the data processing and modelling environment from the yaml can take several minutes.
 
 ## Example data processing
 
