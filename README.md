@@ -77,6 +77,7 @@ jupyter execute make_supplementary_figure_S2a_and_S3a.ipynb
 jupyter execute make_supplementary_figure_S2b_and_S3b.ipynb
 jupyter execute make_supplementary_figure_S4.ipynb
 conda activate data_prep_env
+jupyter execute make_supplementary_figure_S5a_and_b.ipynb
 python make_supplementary_figure_S7.py
 ```
 
