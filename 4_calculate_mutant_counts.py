@@ -32,6 +32,7 @@ output_folder = args.output
 def fastq_to_dataframe(fastq_file):
 
     records = []
+    total = sum(1 for _ in SeqIO.parse(fastq_file, "fastq"))
     for record in tqdm(SeqIO.parse(fastq_file, "fastq"), total=total, desc="Parsing FASTQ"):
         records.append({
             "ID": record.id,
