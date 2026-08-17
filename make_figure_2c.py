@@ -39,7 +39,6 @@ def AA_hotencoding(variant):
         onehot_encoded.append(letter)
                 
     return onehot_encoded
-# This takes 6 min to run with 2 folds and 10 test set percentages
 
 # Paul Tol's Notes color scheme
 colors = ['#4477AA','#66CCEE','#228833','#CCBB44','#EE6677','#AA3377','#BBBBBB']
@@ -50,25 +49,100 @@ plt.rcParams['font.family'] = 'Arial'
 plt.rcParams['font.size'] = 16
 
 
+# ---------------------------------------------------------------------------
+# Weighted-loss helper
+# ---------------------------------------------------------------------------
+def compute_power_weights(df,
+                          pre_path,
+                          post_path,
+                          key_col='amino_acid_sequence',
+                          count_col='variant_count'):
+    """
+    Return a copy of `df` with a 'sample_weight' column equal to 1 / sigma_i^2,
+    where sigma_i^2 is the variance of the enrichment score S:
+
+        sigma_i^2 = (1 / k_post)(1 - k_post / sum_post)
+                  + (1 / k_pre )(1 - k_pre  / sum_pre )
+
+    k_post / k_pre are the post-/pre-encapsulation read counts of amino-acid
+    variant i, and sum_post / sum_pre are the total read counts across the whole
+    library. Passing 1/sigma_i^2 as sklearn's per-sample weight reproduces the
+    weighted loss:  L = sum_i (1 / sigma_i^2) [y_i - f(x_i)]^2
+
+    The count files must contain `key_col` (amino_acid_sequence) and `count_col`
+    (variant_count). If several rows share an amino-acid sequence -- e.g. because
+    synonymous nucleotide variants were collapsed onto the same amino-acid
+    sequence -- their counts are SUMMED into one count per variant.
+    """
+    def _load(path, new_count_name):
+        tbl = pd.read_excel(path)
+        missing = [c for c in (key_col, count_col) if c not in tbl.columns]
+        if missing:
+            raise KeyError(
+                f"{path}: looked for {missing}, but the file's columns are "
+                f"{list(tbl.columns)}. Set key_col / count_col to the real names.")
+        pooled = tbl.groupby(key_col, as_index=False)[count_col].sum()
+        return pooled.rename(columns={count_col: new_count_name})
+
+    post = _load(post_path, 'k_post')
+    pre  = _load(pre_path,  'k_pre')
+
+    # Library totals
+    sum_post = float(post['k_post'].sum())
+    sum_pre  = float(pre['k_pre'].sum())
+
+    merged = (df.merge(post, on=key_col, how='left')
+                .merge(pre,  on=key_col, how='left'))
+
+    k_post = merged['k_post'].to_numpy(dtype=float)
+    k_pre  = merged['k_pre'].to_numpy(dtype=float)
+
+    # Report how many df variants were successfully matched to a count
+    matched = int((np.isfinite(k_post) & np.isfinite(k_pre)).sum())
+    print(f'[weighting] matched {matched} / {len(merged)} amino-acid variants '
+          f'to pre & post counts.')
+
+    # Variants we cannot weight (missing from a count file, or count <= 0)
+    invalid = ~(np.isfinite(k_post) & np.isfinite(k_pre) & (k_post > 0) & (k_pre > 0))
+    if invalid.any():
+        print(f'[weighting] WARNING: {int(invalid.sum())} of {len(merged)} variants '
+              f'have missing or non-positive counts and are dropped from Round_3_LR_Weight.')
+
+    with np.errstate(divide='ignore', invalid='ignore'):
+        variance = ((1.0 / k_post) * (1.0 - k_post / sum_post)
+                    + (1.0 / k_pre) * (1.0 - k_pre / sum_pre))
+        weight = 1.0 / variance
+
+    merged['sample_weight'] = weight
+    merged = merged[np.isfinite(merged['sample_weight']) & (merged['sample_weight'] > 0)].reset_index(drop=True)
+    return merged
+
+
 # Load the Excel file into a DataFrame
 first_round = 'data/Excel/first_round/enrichment_score_with_amino_acid_sequences.xlsx'
 third_round_cutoff = 'data/Excel/third_round/enrichment_score_with_amino_acid_sequence_threshold.xlsx'
 third_round = 'data/Excel/third_round/enrichment_score_with_amino_acid_sequence.xlsx'
 pseudo_count = 'data/Excel/third_round/enrichment_score_with_amino_acid_sequence_pseudo_count.xlsx'
-weighing = 'data/Excel/third_round/enrichment_score_with_amino_acid_sequence_weighing.xlsx'
+
+# Read counts used to weight the loss of Round_3_LR_Weight (Eq. 6 & 7)
+post_count_path = 'data/Excel/third_round/post_encapsulation_variant_count_with_amino_acid_sequences.xlsx'
+pre_count_path  = 'data/Excel/third_round/pre_encapsulation_variant_count_with_amino_acid_sequences.xlsx'
 
 df_first_round_ = pd.read_excel(first_round)
 df_third_round_cutoff_ = pd.read_excel(third_round_cutoff)
 df_pseudo_count_ = pd.read_excel(pseudo_count)
 df_third_round_ = pd.read_excel(third_round)
-df_weighing_ = pd.read_excel(weighing)
 
 # log2 transform the 'averaged_enrichment_score' column
 df_first_round_['log2_averaged_enrichment_score'] = df_first_round_['averaged_enrichment_score'].apply(lambda x: np.log2(x))
 df_third_round_cutoff_['log2_averaged_enrichment_score'] = df_third_round_cutoff_['averaged_enrichment_score'].apply(lambda x: np.log2(x))
 df_pseudo_count_['log2_averaged_enrichment_score'] = df_pseudo_count_['averaged_enrichment_score'].apply(lambda x: np.log2(x))
 df_third_round_['log2_averaged_enrichment_score'] = df_third_round_['averaged_enrichment_score'].apply(lambda x: np.log2(x))
-df_weighing_['log2_averaged_enrichment_score'] = df_weighing_['averaged_enrichment_score'].apply(lambda x: np.log2(x))
+
+# Round_3_LR_Weight uses the SAME data as Round_3_LR (df_third_round), but every
+# variant carries a sample weight = 1/sigma_i^2 derived from its pre/post read
+# count.
+df_weighing_ = compute_power_weights(df_third_round_, pre_count_path, post_count_path)
 
 # Define the models to be used
 models = {
@@ -134,8 +208,15 @@ for model_name, model_func in models.items():
             # Initialize the Linear Regression model
             lin_reg = LinearRegression()
 
+            # For Round_3_LR_Weight, weight each variant's contribution to the
+            # loss by 1/sigma_i^2. All other models train unweighted
+            # (sample_weight=None reproduces ordinary least squares exactly).
+            train_sample_weight = None
+            if model_name == 'Round_3_LR_Weight':
+                train_sample_weight = np.asarray(train['sample_weight'], dtype=float)
+
             # Fit the model on the training data
-            lin_reg.fit(X_train_reshaped, train_y)
+            lin_reg.fit(X_train_reshaped, train_y, sample_weight=train_sample_weight)
 
             # Apply the model to the one-hot encoded test set
             y_pred = lin_reg.predict(X_test_reshaped) 
