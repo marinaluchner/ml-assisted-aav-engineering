@@ -8,7 +8,7 @@ This repository provides source code to reproduce, verify and extend the study "
 
 ## Abstract
 
-Directed evolution enables the discovery of protein mutants with improved fitness through iterative rounds of selection and has been widely applied to adeno-associated virus (AAV) capsid engineering. Machine learning (ML) can augment this process by prioritising mutants for experimental validation, but whether its benefits outweigh the added cost of ML-designed library construction remains unclear. Here, we address this question by considering improvements in manufacturing efficiency of AAV capsids in the context of exosomal encapsulation, which is a technique for improving AAV immunogenicity. We generated a directed evolution dataset comprising 53,974 mutants across three rounds of selection and an independent assessment dataset of 472 ML-designed mutants with detailed profiling. Directed evolution alone yielded a 3-fold improvement, while ML yielded a further 15-fold improvement in manufacturing efficiency. We show that data quality – specifically the number of selection rounds and the statistical power of mutant counts – has a greater impact on model performance than model architecture. Together, the combination of ML and directed evolution substantially improved manufacturing efficiency of AAV exosomal encapsulation, with a 45-fold overall improvement, demonstrating that ML-assisted directed evolution outperforms directed evolution alone. Finally, we provide practical guidance on experimental design and implementation of ML tuning strategies that can augment model performance in protein engineering applications.  
+Directed evolution enables the discovery of protein mutants with improved fitness through iterative rounds of selection and has been widely applied to adeno-associated virus (AAV) capsid engineering. Machine learning (ML) can augment this process by prioritising mutants for experimental validation, but whether its benefits outweigh the added cost of ML-designed library construction remains unclear. Here, we address this question by considering improvements in manufacturing efficiency of AAV capsids in the context of exosomal encapsulation, which is a technique for improving AAV immunogenicity. We generated a directed evolution dataset comprising 53,974 mutants across three rounds of selection and an independent assessment dataset of 472 ML-designed mutants with detailed profiling. Directed evolution alone yielded a 3-fold improvement, while ML-assisted directed evolution yielded a 41-fold improvement in manufacturing efficiency, demonstrating that ML-assisted directed evolution outperforms directed evolution alone. We show that data quality – specifically the number of selection rounds and the statistical power of mutant counts – has a greater impact on model performance than model architecture. Finally, we provide practical guidance on experimental design and implementation of ML tuning strategies that can augment model performance in protein engineering applications.  
 
 ---
 
@@ -20,7 +20,7 @@ The requirements to run the data processing and associated analysis are stored i
 conda env create -f data_processing.yaml
 conda env create -f modelling.yaml
 ```
-Installing the data processing environment from the yaml file can take several minutes, while the modelling environment can take up to an hour.
+Installing the data processing and modelling environment from the yaml can take several minutes.
 
 ## Example data processing
 
@@ -33,13 +33,13 @@ Example input to run NGS data processing and calculate the log enrichment score 
 conda activate data_prep_env
 bash 1_combine_FASTQ_files.bash example/raw_NGS_files example/outputs
 python 2_align_and_merge_paired_end_reads.py -i example/outputs -o example/outputs/sample_01
-bash 3_filter_and_trim_reads.bash example/outputs example/outputs/sample_01
-python 4_calculate_mutant_counts.py -i example/outputs -o example/outputs
+bash 3_filter_and_trim_reads.bash example/outputs/sample_01 example/outputs/sample_01
+python 4_calculate_mutant_counts.py -i example/outputs/sample_01 -o example/outputs/sample_01
 python 5_calculate_log_enrichment_score.py -pre_encapsulation_i example/outputs/sample_01/sample_01_example_variant_count.xlsx -post_encapsulation_i example/outputs/sample_01/sample_01_example_variant_count.xlsx -o example/outputs/sample_01
 python 6_combine_datasets_across_replicates.py -i example/outputs/sample_01/enrichment_score_sample_01_example_variant_count_sample_01_example_variant_count.xlsx example/outputs/sample_01/enrichment_score_sample_01_example_variant_count_sample_01_example_variant_count.xlsx -o example/outputs/sample_01
 python 7_translate_nucleotide_sequence.py -i example/outputs/sample_01 -o example/outputs/sample_01
 ```
-Alignment and merging are the most time-consuming steps and take ~5 min to run with 4 threads. The expected outputs are included in example/outputs/enrichment_scores.csv.
+Alignment and merging are the most time-consuming steps, completed in 6.6 seconds on 4 threads. The expected outputs will be written to example/outputs/sample_01/merged_enrichment_scores_with_amino_acid_sequences.xlsx.
 
 ## Example model training
 
@@ -76,7 +76,8 @@ jupyter execute make_figure_4d.ipynb
 jupyter execute make_supplementary_figure_S2a_and_S3a.ipynb
 jupyter execute make_supplementary_figure_S2b_and_S3b.ipynb
 jupyter execute make_supplementary_figure_S4.ipynb
-conda activate data_pred_env
+conda activate data_prep_env
+jupyter execute make_supplementary_figure_S5a_and_b.ipynb
 python make_supplementary_figure_S7.py
 ```
 
